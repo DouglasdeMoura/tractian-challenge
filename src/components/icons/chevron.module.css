@@ -1,0 +1,15 @@
+.icon[data-pointing="top"] {
+  transform: rotate(180deg);
+}
+
+.icon[data-pointing="bottom"] {
+  transform: rotate(0);
+}
+
+.icon[data-pointing="left"] {
+  transform: rotate(90deg);
+}
+
+.icon[data-pointing="right"] {
+  transform: rotate(-90deg);
+}
