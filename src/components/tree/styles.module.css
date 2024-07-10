@@ -1,0 +1,10 @@
+.item {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xsmall);
+}
+
+.padding {
+  padding-left: 20px;
+}
