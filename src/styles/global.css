@@ -50,42 +50,52 @@ h6 {
   --secondary-color: #4caf50; /* Green color used for status indicators */
   --danger-color: #f44336; /* Red color used for status indicators */
   --warning-color: #ff9800; /* Orange color used for status indicators */
-  --text-color: #333333; /* Dark gray for main text */
-  --text-color-light: #666666; /* Lighter gray for secondary text */
+  --text-color: #363c44; /* Dark gray for main text */
+  --text-color-light: #c1c9d2; /* Lighter gray for secondary text */
   --background-color: #ffffff; /* White background */
   --background-color-light: #f5f5f5; /* Light gray for secondary backgrounds */
   --border-color: #e0e0e0; /* Light gray for borders */
 
   /* Typography */
-  --font-family: 'Arial', sans-serif;
-  --font-size-small: 0.75rem;  /* 12px */
-  --font-size-normal: 0.875rem;  /* 14px */
-  --font-size-large: 1rem;  /* 16px */
-  --font-size-xlarge: 1.125rem;  /* 18px */
+  --font-family: "Inter", sans-serif;
+  --font-size-small: 0.75rem; /* 12px */
+  --font-size-normal: 0.875rem; /* 14px */
+  --font-size-large: 1rem; /* 16px */
+  --font-size-xlarge: 1.125rem; /* 18px */
   --font-weight-normal: 400;
-  --font-weight-bold: 700;
+  --font-weight-semi-bold: 600;
 
   /* Spacing */
-  --spacing-xsmall: 0.25rem;  /* 4px */
-  --spacing-small: 0.5rem;  /* 8px */
-  --spacing-medium: 1rem;  /* 16px */
-  --spacing-large: 1.5rem;  /* 24px */
-  --spacing-xlarge: 2rem;  /* 32px */
+  --spacing-xxsmall: 0.25rem; /* 4px */
+  --spacing-xsmall: 0.5rem; /* 8px */
+  --spacing-small: 0.75rem; /* 12px */
+  --spacing-medium: 1rem; /* 16px */
+  --spacing-large: 1.5rem; /* 24px */
+  --spacing-xlarge: 2rem; /* 32px */
 
   /* Border Radius */
-  --border-radius-small: 0.125rem;  /* 2px */
-  --border-radius-medium: 0.25rem;  /* 4px */
-  --border-radius-large: 0.5rem;  /* 8px */
+  --border-radius-small: 0.125rem; /* 2px */
+  --border-radius-medium: 0.25rem; /* 4px */
+  --border-radius-large: 0.5rem; /* 8px */
 
   /* Shadows */
-  --box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.12), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.24);
+  --box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.12),
+    0 0.0625rem 0.125rem rgba(0, 0, 0, 0.24);
 
   /* Layout */
-  --header-height: 3rem;  /* 48px */
-  --sidebar-width: 15.625rem;  /* 250px */
+  --header-height: 3rem; /* 48px */
+  --sidebar-width: 15.625rem; /* 250px */
 
   /* Icons */
-  --icon-size-small: 1rem;  /* 16px */
-  --icon-size-medium: 1.5rem;  /* 24px */
-  --icon-size-large: 2rem;  /* 32px */
+  --icon-size-small: 1rem; /* 16px */
+  --icon-size-medium: 1.5rem; /* 24px */
+  --icon-size-large: 2rem; /* 32px */
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-normal);
+  color: var(--text-color);
+  background-color: var(--background-color);
 }
