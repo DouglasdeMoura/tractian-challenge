@@ -30,42 +30,73 @@ const useAssets = () => {
   return useSWR<Asset[]>(id ? `/companies/${id}/assets` : null);
 };
 
-function convertToTreeData(jsonArray?: Asset[]): NodeProps[] {
-  if (!jsonArray) {
+type Location = {
+  id: string;
+  name: string;
+  parentId: string | null;
+};
+
+const useLocations = () => {
+  const { id } = useParams();
+  return useSWR<Location[]>(id ? `/companies/${id}/locations` : null);
+};
+
+function convertToTreeData(
+  locations?: Location[],
+  assets?: Asset[],
+): NodeProps[] {
+  if (!locations || !assets) {
     return [];
   }
 
-  const nodesMap = new Map<string, NodeProps>();
+  const locationNodes: Map<string, NodeProps> = new Map();
+  const assetNodes: Map<string, NodeProps> = new Map();
 
-  // Step 1: Create nodes for each asset and add them to the map
-  jsonArray.forEach(({ id, name }) => {
-    const node: NodeProps = { label: name, children: [] };
-    nodesMap.set(id, node);
+  // Process Locations
+  locations.forEach((location) => {
+    locationNodes.set(location.id, {
+      label: location.name,
+      children: [],
+    });
   });
 
-  // Step 2: Build the tree structure by setting children for each node
-  jsonArray.forEach(({ id, parentId }) => {
-    if (parentId) {
-      const parentNode = nodesMap.get(parentId);
-      const currentNode = nodesMap.get(id);
-      if (parentNode && currentNode) {
-        parentNode.children = [...(parentNode.children || []), currentNode];
+  // Process Assets
+  assets.forEach((asset) => {
+    const node: NodeProps = {
+      label: asset.name,
+      children: [],
+    };
+
+    if (asset.sensorType) {
+      // It's a component
+      if (asset.parentId && assetNodes.has(asset.parentId)) {
+        assetNodes.get(asset.parentId)?.children?.push(node);
+      } else if (asset.locationId && locationNodes.has(asset.locationId)) {
+        locationNodes.get(asset.locationId)?.children?.push(node);
       }
+    } else {
+      // It's an asset
+      if (asset.parentId && assetNodes.has(asset.parentId)) {
+        assetNodes.get(asset.parentId)?.children?.push(node);
+      } else if (asset.locationId && locationNodes.has(asset.locationId)) {
+        locationNodes.get(asset.locationId)?.children?.push(node);
+      } else {
+        // Unlinked asset, handle accordingly
+      }
+      assetNodes.set(asset.id, node);
     }
   });
 
-  // Step 3: Extract the root nodes (nodes without a parentId or with a non-existent parentId)
-  const rootNodes = Array.from(nodesMap.values()).filter(({ label }) => {
-    const currentItem = jsonArray.find((item) => item.name === label);
-    return !currentItem?.parentId || !nodesMap.has(currentItem.parentId);
-  });
+  // Compile the tree from locations
+  const treeData: NodeProps[] = Array.from(locationNodes.values());
 
-  return rootNodes;
+  return treeData;
 }
 
 export default function Company() {
   const { data: assets } = useAssets();
   const { data: company } = useCompany();
+  const { data: locations } = useLocations();
 
   return (
     <div>
@@ -79,7 +110,7 @@ export default function Company() {
           ]}
         />
       ) : null}
-      <Tree data={convertToTreeData(assets)} />
+      <Tree data={convertToTreeData(locations, assets)} />
     </div>
   );
 }
