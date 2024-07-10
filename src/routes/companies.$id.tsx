@@ -4,6 +4,8 @@ import { useCompanies } from ".";
 import { Link, useParams } from "react-router-dom";
 import { NodeProps, Tree } from "../components/tree";
 
+import styles from "./companies.module.css";
+
 type Asset = {
   id: string;
   locationId: string | null;
@@ -53,9 +55,14 @@ function convertToTreeData(
   const assetNodes: Map<string, NodeProps> = new Map();
 
   // Process Locations
+
   locations.forEach((location) => {
     locationNodes.set(location.id, {
-      label: location.name,
+      label: (
+        <span className={styles.item}>
+          <img src="/assets/location.png" alt="Location" /> {location.name}
+        </span>
+      ),
       children: [],
     });
   });
@@ -70,20 +77,57 @@ function convertToTreeData(
     if (asset.sensorType) {
       // It's a component
       if (asset.parentId && assetNodes.has(asset.parentId)) {
-        assetNodes.get(asset.parentId)?.children?.push(node);
+        assetNodes.get(asset.parentId)?.children?.push({
+          ...node,
+          label: (
+            <span className={styles.item}>
+              <img src="/assets/component.png" alt="Component" /> {node.label}
+            </span>
+          ),
+        });
       } else if (asset.locationId && locationNodes.has(asset.locationId)) {
-        locationNodes.get(asset.locationId)?.children?.push(node);
+        locationNodes.get(asset.locationId)?.children?.push({
+          ...node,
+          label: (
+            <span className={styles.item}>
+              <img src="/assets/component.png" alt="Component" /> {node.label}
+            </span>
+          ),
+        });
+      } else {
+        // treat it here
       }
     } else {
       // It's an asset
       if (asset.parentId && assetNodes.has(asset.parentId)) {
-        assetNodes.get(asset.parentId)?.children?.push(node);
+        assetNodes.get(asset.parentId)?.children?.push({
+          ...node,
+          label: (
+            <span className={styles.item}>
+              <img src="/assets/asset.png" alt="Asset" /> {node.label}
+            </span>
+          ),
+        });
       } else if (asset.locationId && locationNodes.has(asset.locationId)) {
-        locationNodes.get(asset.locationId)?.children?.push(node);
+        locationNodes.get(asset.locationId)?.children?.push({
+          ...node,
+          label: (
+            <span className={styles.item}>
+              <img src="/assets/asset.png" alt="Asset" /> {node.label}
+            </span>
+          ),
+        });
       } else {
-        // Unlinked asset, handle accordingly
+        // Unlinked asset
+        assetNodes.set(asset.id, {
+          ...node,
+          label: (
+            <span className={styles.item}>
+              <img src="/assets/asset.png" alt="Asset" /> {node.label}
+            </span>
+          ),
+        });
       }
-      assetNodes.set(asset.id, node);
     }
   });
 
