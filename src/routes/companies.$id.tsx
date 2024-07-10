@@ -6,7 +6,7 @@ import { NodeProps, Tree } from "../components/tree";
 
 import styles from "./companies.module.css";
 
-type Asset = {
+export type Asset = {
   id: string;
   locationId: string | null;
   name: string;
@@ -32,7 +32,7 @@ const useAssets = () => {
   return useSWR<Asset[]>(id ? `/companies/${id}/assets` : null);
 };
 
-type Location = {
+export type Location = {
   id: string;
   name: string;
   parentId: string | null;

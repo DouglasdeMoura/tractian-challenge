@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import useSWR from "swr";
 import styles from "./index.module.css";
 
-type Company = {
+export type Company = {
   id: string;
   name: string;
 };
