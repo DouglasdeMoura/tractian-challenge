@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { Breadcrumb } from "../components/breadcrumb";
 import { useCompanies } from ".";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { NodeProps, Tree } from "../components/tree";
 
 type Asset = {
@@ -69,7 +69,16 @@ export default function Company() {
 
   return (
     <div>
-      {company ? <Breadcrumb items={["Ativos", company.name]} /> : null}
+      {company ? (
+        <Breadcrumb
+          items={[
+            <Link key={0} to="/">
+              Ativo
+            </Link>,
+            company.name,
+          ]}
+        />
+      ) : null}
       <Tree data={convertToTreeData(assets)} />
     </div>
   );

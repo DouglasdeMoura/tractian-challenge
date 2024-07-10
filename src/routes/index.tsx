@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Link } from "react-router-dom";
 import useSWR from "swr";
+import styles from "./index.module.css";
 
 type Company = {
   id: string;
@@ -13,7 +14,7 @@ function Index() {
   const { data } = useCompanies();
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <h1>Selecione a empresa</h1>
 
       <ul>
@@ -23,7 +24,7 @@ function Index() {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 

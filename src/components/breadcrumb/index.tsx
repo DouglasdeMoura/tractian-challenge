@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./styles.module.css";
 
 type BreadcrumbProps = {
-  items: string[];
+  items: React.ReactNode[];
 };
 
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
@@ -10,11 +10,8 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
     <div className={styles.wrapper}>
       {items.map((item, index) => {
         return (
-          <React.Fragment key={item}>
-            <span
-              key={item}
-              className={index === 0 ? styles.initial : styles.item}
-            >
+          <React.Fragment key={index}>
+            <span className={index === 0 ? styles.initial : styles.item}>
               {item}
             </span>
             {index !== items.length - 1 && (
