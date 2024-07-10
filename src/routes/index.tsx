@@ -1,15 +1,24 @@
 import useSWR from "swr";
 
-function App() {
-  const { data } = useSWR("/companies");
+type Company = {
+  id: string;
+  name: string;
+};
+
+const useCompanies = () => useSWR<Company[]>("/companies");
+
+function Index() {
+  const { data } = useCompanies();
 
   return (
     <>
-      <pre>
-        <code>{JSON.stringify(data, null, 2)}</code>
-      </pre>
+      <h1>Selecione a empresa</h1>
+
+      <ul>
+        {data?.map((company) => <li key={company.id}>{company.name}</li>)}
+      </ul>
     </>
   );
 }
 
-export default App;
+export default Index;
