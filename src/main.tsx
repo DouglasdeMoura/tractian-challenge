@@ -1,8 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./routes/index.tsx";
+import Index from "./routes/index.tsx";
 import { SWRConfig } from "swr";
 import { api } from "./api/client.ts";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import "./styles/global.css";
 
 async function enableMocking() {
@@ -17,13 +19,15 @@ async function enableMocking() {
   return worker.start();
 }
 
+const router = createBrowserRouter([{ path: "/", element: <Index /> }]);
+
 enableMocking()
   .then(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ReactDOM.createRoot(document.getElementById("root")!).render(
       <React.StrictMode>
         <SWRConfig value={{ fetcher: api.get }}>
-          <App />
+          <RouterProvider router={router} />
         </SWRConfig>
       </React.StrictMode>,
     );
