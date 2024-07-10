@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  gap: var(--spacing-xsmall);
+  align-items: center;
+}
+
+.initial {
+  font-weight: var(--font-weight-semi-bold);
+  font-size: var(--font-size-xxlarge);
+}
+
+.item,
+.separator {
+  color: var(--text-color-lighter);
+}

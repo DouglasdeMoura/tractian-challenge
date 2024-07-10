@@ -31,13 +31,13 @@
 }
 
 .input::placeholder {
-  color: var(--text-color-light);
+  color: var(--text-color-lighter);
   opacity: 1; /* Firefox */
 }
 
 .input::-ms-input-placeholder {
   /* Edge 12 -18 */
-  color: var(--text-color-light);
+  color: var(--text-color-lighter);
 }
 
 .inputContainer {
