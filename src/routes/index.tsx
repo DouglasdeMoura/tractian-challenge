@@ -1,7 +1,13 @@
+import useSWR from "swr";
+
 function App() {
+  const { data } = useSWR("/companies");
+
   return (
     <>
-      <h1>App</h1>
+      <pre>
+        <code>{JSON.stringify(data, null, 2)}</code>
+      </pre>
     </>
   );
 }
