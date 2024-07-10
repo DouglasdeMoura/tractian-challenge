@@ -6,6 +6,7 @@ import { api } from "./api/client.ts";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./styles/global.css";
+import Company from "./routes/companies.$id.tsx";
 
 async function enableMocking() {
   if (!import.meta.env.DEV) {
@@ -19,7 +20,13 @@ async function enableMocking() {
   return worker.start();
 }
 
-const router = createBrowserRouter([{ path: "/", element: <Index /> }]);
+const router = createBrowserRouter([
+  { path: "/", element: <Index /> },
+  {
+    path: "/companies/:id",
+    element: <Company />,
+  },
+]);
 
 enableMocking()
   .then(() => {

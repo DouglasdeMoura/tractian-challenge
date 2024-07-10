@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+import { Link } from "react-router-dom";
 import useSWR from "swr";
 
 type Company = {
@@ -5,7 +7,7 @@ type Company = {
   name: string;
 };
 
-const useCompanies = () => useSWR<Company[]>("/companies");
+export const useCompanies = () => useSWR<Company[]>("/companies");
 
 function Index() {
   const { data } = useCompanies();
@@ -15,7 +17,11 @@ function Index() {
       <h1>Selecione a empresa</h1>
 
       <ul>
-        {data?.map((company) => <li key={company.id}>{company.name}</li>)}
+        {data?.map((company) => (
+          <li key={company.id}>
+            <Link to={`/companies/${company.id}`}>{company.name}</Link>
+          </li>
+        ))}
       </ul>
     </>
   );

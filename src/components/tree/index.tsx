@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronIcon } from "../icons/chevron";
 import styles from "./styles.module.css";
 
-type NodeProps = {
+export type NodeProps = {
   label: React.ReactNode;
   children?: NodeProps[];
 };
