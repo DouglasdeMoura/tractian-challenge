@@ -9,16 +9,13 @@ export type NodeProps = {
   label: React.ReactNode;
   type: Type;
   children: NodeProps[];
+  open?: boolean;
 };
 
-type TreeProps = {
-  data: NodeProps[];
-};
+const Node: React.FC<NodeProps> = ({ children, label, type, open }) => {
+  const [isExpanded, setIsExpanded] = useState(!!open);
 
-const Node: React.FC<NodeProps> = (props) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const hasChildren = props.children.length > 0;
+  const hasChildren = children.length > 0;
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -33,13 +30,13 @@ const Node: React.FC<NodeProps> = (props) => {
           ) : (
             <ChevronIcon pointing="right" />
           ))}
-        <img className={styles.icon} src={`/assets/${props.type}.png`} />
-        {props.label}
+        <img className={styles.icon} src={`/assets/${type}.png`} />
+        {label}
       </div>
       {isExpanded && hasChildren && (
         <div className={styles.padding}>
-          {props.children.map((childNode, index) => (
-            <Node key={index} {...childNode} />
+          {children.map((childNode) => (
+            <Node key={childNode.id} {...childNode} open={open} />
           ))}
         </div>
       )}
@@ -47,11 +44,16 @@ const Node: React.FC<NodeProps> = (props) => {
   );
 };
 
-export const Tree: React.FC<TreeProps> = ({ data }) => {
+type TreeProps = {
+  data: NodeProps[];
+  open?: boolean;
+};
+
+export const Tree: React.FC<TreeProps> = ({ data, open }) => {
   return (
     <div>
-      {data.map((node, index) => (
-        <Node key={index} {...node} />
+      {data.map((node) => (
+        <Node key={node.id} {...node} open={open} />
       ))}
     </div>
   );
