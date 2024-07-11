@@ -6,7 +6,7 @@ export function generateTree(items: Location[]): NodeProps[] {
 
   // Create a map of all items
   items.forEach((item) => {
-    itemMap.set(item.id, { id: item.id, label: item.name, children: [] });
+    itemMap.set(item.id, { id: item.id, type: item.type, label: item.name, children: [] });
   });
 
   const result: NodeProps[] = [];

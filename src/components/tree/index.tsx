@@ -2,9 +2,12 @@ import { useState } from "react";
 import { ChevronIcon } from "../icons/chevron";
 import styles from "./styles.module.css";
 
+export type Type = "component" | "asset" | "location";
+
 export type NodeProps = {
   id: string;
   label: React.ReactNode;
+  type: Type;
   children: NodeProps[];
 };
 
@@ -30,6 +33,7 @@ const Node: React.FC<NodeProps> = (props) => {
           ) : (
             <ChevronIcon pointing="right" />
           ))}
+        <img className={styles.icon} src={`/assets/${props.type}.png`} />
         {props.label}
       </div>
       {isExpanded && hasChildren && (
