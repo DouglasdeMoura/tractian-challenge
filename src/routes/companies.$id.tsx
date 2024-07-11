@@ -10,6 +10,9 @@ import { generateTree } from "../utils/generate-tree";
 import { normalizeAsset } from "../utils/normalize-asset";
 import { Input } from "../components/input";
 import { SearchIcon } from "../components/icons/search";
+import { Checkbox } from "../components/checkbox";
+
+import styles from "./companies.module.css";
 
 export type Asset = {
   id: string;
@@ -88,14 +91,70 @@ export default function Company() {
 
   return (
     <div>
-      <Input
-        placeholder="Buscar ativo ou local"
-        rightSection={<SearchIcon />}
-        onChange={(e) => {
-          setSearchParams({ q: e.currentTarget.value });
-        }}
-        defaultValue={searchParams.get("q") || ""}
-      />
+      <div>
+        <Input
+          placeholder="Buscar ativo ou local"
+          rightSection={<SearchIcon />}
+          onChange={(e) => {
+            if (!e.currentTarget.value) {
+              searchParams.delete("q");
+
+              setSearchParams({
+                ...Object.fromEntries(searchParams),
+              });
+              return;
+            }
+
+            setSearchParams({
+              ...Object.fromEntries(searchParams),
+              q: e.currentTarget.value,
+            });
+          }}
+          defaultValue={searchParams.get("q") || ""}
+        />
+        <div className={styles.checkboxContainer}>
+          <Checkbox
+            value="energy"
+            onChange={(e) => {
+              if (e.currentTarget.checked) {
+                setSearchParams({
+                  ...Object.fromEntries(searchParams),
+                  sensorType: e.currentTarget.value,
+                });
+                return;
+              }
+
+              searchParams.delete("sensorType");
+
+              setSearchParams({
+                ...Object.fromEntries(searchParams),
+              });
+            }}
+          >
+            Energy Sensors
+          </Checkbox>
+          <Checkbox
+            value="alert"
+            onChange={(e) => {
+              if (e.currentTarget.checked) {
+                setSearchParams({
+                  ...Object.fromEntries(searchParams),
+                  status: e.currentTarget.value,
+                });
+                return;
+              }
+
+              searchParams.delete("status");
+
+              setSearchParams({
+                ...Object.fromEntries(searchParams),
+              });
+            }}
+          >
+            Critical Status
+          </Checkbox>
+        </div>
+      </div>
       {company ? (
         <Breadcrumb
           items={[

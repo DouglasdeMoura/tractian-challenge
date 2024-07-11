@@ -4,3 +4,10 @@
   align-items: center;
   padding: 10px;
 }
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-medium);
+  padding: var(--spacing-medium) 0;
+}
