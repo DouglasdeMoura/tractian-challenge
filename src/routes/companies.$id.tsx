@@ -1,12 +1,15 @@
 import useSWR from "swr";
 import { Breadcrumb } from "../components/breadcrumb";
 import { useCompanies } from ".";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Tree, Type } from "../components/tree";
+import Fuse from "fuse.js";
 
 // import styles from "./companies.module.css";
 import { generateTree } from "../utils/generate-tree";
 import { normalizeAsset } from "../utils/normalize-asset";
+import { Input } from "../components/input";
+import { SearchIcon } from "../components/icons/search";
 
 export type Asset = {
   id: string;
@@ -62,9 +65,37 @@ export default function Company() {
   const { data: assets } = useAssets();
   const { data: company } = useCompany();
   const { data: locations } = useLocations();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const treeItems = locations
+    ? generateTree(
+        locations.concat(
+          // @ts-expect-error No time to fix it right now
+          normalizeAsset(assets),
+        ),
+      )
+    : [];
+
+  const fuse = new Fuse(treeItems, {
+    keys: [
+      "label",
+      "children.label",
+      "children.children.label",
+      "children.children.label",
+      "children.children.children.label",
+    ],
+  });
 
   return (
     <div>
+      <Input
+        placeholder="Buscar ativo ou local"
+        rightSection={<SearchIcon />}
+        onChange={(e) => {
+          setSearchParams({ q: e.currentTarget.value });
+        }}
+        defaultValue={searchParams.get("q") || ""}
+      />
       {company ? (
         <Breadcrumb
           items={[
@@ -77,12 +108,11 @@ export default function Company() {
       ) : null}
       {locations && assets ? (
         <Tree
-          data={generateTree(
-            locations.concat(
-              // @ts-expect-error No time to fix it right now
-              normalizeAsset(assets),
-            ),
-          )}
+          data={
+            searchParams.get("q")
+              ? fuse.search(searchParams.get("q") || "").map((i) => i.item)
+              : treeItems
+          }
         />
       ) : null}
     </div>

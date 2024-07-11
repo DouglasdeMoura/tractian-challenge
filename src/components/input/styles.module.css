@@ -1,8 +1,7 @@
 .wrapper {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   gap: var(--spacing-xsmall);
-  width: 100%;
 
   --__section-height: 47px;
 }
