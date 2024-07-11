@@ -3,8 +3,9 @@ import { ChevronIcon } from "../icons/chevron";
 import styles from "./styles.module.css";
 
 export type NodeProps = {
+  id: string;
   label: React.ReactNode;
-  children?: NodeProps[];
+  children: NodeProps[];
 };
 
 type TreeProps = {
@@ -14,7 +15,7 @@ type TreeProps = {
 const Node: React.FC<NodeProps> = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const hasChildren = props.children && props.children.length > 0;
+  const hasChildren = props.children.length > 0;
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -33,7 +34,7 @@ const Node: React.FC<NodeProps> = (props) => {
       </div>
       {isExpanded && hasChildren && (
         <div className={styles.padding}>
-          {props.children?.map((childNode, index) => (
+          {props.children.map((childNode, index) => (
             <Node key={index} {...childNode} />
           ))}
         </div>
