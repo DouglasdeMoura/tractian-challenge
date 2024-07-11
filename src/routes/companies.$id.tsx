@@ -81,12 +81,15 @@ export default function Company() {
       : [];
 
   const fuse = new Fuse(treeItems, {
+    threshold: 0.1,
     keys: [
       "label",
       "children.label",
       "children.children.label",
       "children.children.label",
       "children.children.children.label",
+      "children.children.children.children.label",
+      "children.children.children.children.children.label",
     ],
   });
 
