@@ -70,14 +70,15 @@ export default function Company() {
   const { data: locations } = useLocations();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const treeItems = locations
-    ? generateTree(
-        locations.concat(
-          // @ts-expect-error No time to fix it right now
-          normalizeAsset(assets),
-        ),
-      )
-    : [];
+  const treeItems =
+    locations && assets
+      ? generateTree(
+          locations.concat(
+            // @ts-expect-error No time to fix it right now
+            normalizeAsset(assets),
+          ),
+        )
+      : [];
 
   const fuse = new Fuse(treeItems, {
     keys: [
