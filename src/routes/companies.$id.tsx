@@ -110,23 +110,23 @@ export default function Company() {
         )
       : [];
 
-  const treeItems = generateTree(
-    items.filter((node) => {
-      if (node.type === "location") {
-        return true;
-      }
+  const filteredItems = items.filter((node) => {
+    if (node.type === "location") {
+      return true;
+    }
 
-      const sensorTypeParam = searchParams.get("sensorType");
-      const statusParam = searchParams.get("status");
+    const sensorTypeParam = searchParams.get("sensorType");
+    const statusParam = searchParams.get("status");
 
-      const sensorTypeMatch =
-        !sensorTypeParam || node.sensorType === sensorTypeParam;
+    const sensorTypeMatch =
+      !sensorTypeParam || node.sensorType === sensorTypeParam;
 
-      const statusMatch = !statusParam || node.status === statusParam;
+    const statusMatch = !statusParam || node.status === statusParam;
 
-      return sensorTypeMatch && statusMatch;
-    }),
-  ).filter(filterEmptyLocations);
+    return sensorTypeMatch && statusMatch;
+  });
+
+  const treeItems = generateTree(filteredItems).filter(filterEmptyLocations);
 
   const fuse = new Fuse(treeItems, {
     threshold: 0.1,
