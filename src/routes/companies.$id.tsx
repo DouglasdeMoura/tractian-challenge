@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { Breadcrumb } from "../components/breadcrumb";
 import { useCompanies } from ".";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { Tree, Type } from "../components/tree";
+import { NodeProps, Tree, Type } from "../components/tree";
 import Fuse from "fuse.js";
 
 // import styles from "./companies.module.css";
@@ -64,6 +64,24 @@ const useLocations = () => {
   };
 };
 
+const filterEmptyLocations = (node: NodeProps) => {
+  if (node.type === "location") {
+    if (Array.isArray(node.children)) {
+      // Recursively filter children
+      node.children = node.children.filter(filterEmptyLocations);
+      // Keep this location if it has children after filtering
+      return node.children.length > 0;
+    }
+    // Remove locations with no children array
+    return false;
+  }
+  // For non-location nodes, keep them and recursively filter their children if any
+  if (Array.isArray(node.children)) {
+    node.children = node.children.filter(filterEmptyLocations);
+  }
+  return true;
+};
+
 export default function Company() {
   const { data: assets } = useAssets();
   const { data: company } = useCompany();
@@ -73,11 +91,26 @@ export default function Company() {
   const treeItems =
     locations && assets
       ? generateTree(
-          locations.concat(
-            // @ts-expect-error No time to fix it right now
-            normalizeAsset(assets),
-          ),
-        )
+          locations
+            .concat(
+              // @ts-expect-error No time to fix it right now
+              normalizeAsset(assets),
+            )
+            .filter((node) => {
+              if (node.type === "location") {
+                return true;
+              }
+
+              const sensorTypeParam = searchParams.get("sensorType");
+              const statusParam = searchParams.get("status");
+
+              const sensorTypeMatch =
+                !sensorTypeParam || node.sensorType === sensorTypeParam;
+              const statusMatch = !statusParam || node.status === statusParam;
+
+              return sensorTypeMatch && statusMatch;
+            }),
+        ).filter(filterEmptyLocations)
       : [];
 
   const fuse = new Fuse(treeItems, {
