@@ -126,6 +126,16 @@ export default function Company() {
     return sensorTypeMatch && statusMatch;
   });
 
+  filteredItems.forEach((node) => {
+    if (node.parentId && !filteredItems.find((n) => n.id === node.parentId)) {
+      const parent = items.find((n) => n.id === node.parentId);
+
+      if (parent) {
+        filteredItems.push(parent);
+      }
+    }
+  });
+
   const treeItems = generateTree(filteredItems).filter(filterEmptyLocations);
 
   const fuse = new Fuse(treeItems, {
