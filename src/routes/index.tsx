@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import styles from "./index.module.css";
 import { Radio } from "../components/radio";
@@ -12,6 +12,7 @@ export type Company = {
 export const useCompanies = () => useSWR<Company[]>("/companies");
 
 function Index() {
+  const { id } = useParams();
   const { data } = useCompanies();
   const navigate = useNavigate();
 
@@ -28,6 +29,7 @@ function Index() {
               onClick={() => {
                 navigate(`/companies/${company.id}`);
               }}
+              defaultChecked={company.id === id}
             >
               {company.name}
             </Radio>
