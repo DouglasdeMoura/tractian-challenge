@@ -1,19 +1,25 @@
 import { NodeProps } from "../components/tree";
-import { Asset } from "../routes/companies.$id";
+import { CompanyAsset } from "../routes/companies.$id";
 
-export function generateTree(items: Asset[]): NodeProps[] {
+export function generateTree(items: CompanyAsset[]): NodeProps[] {
   const itemMap = new Map<string, NodeProps>();
 
   // Create a map of all items
   items.forEach((item) => {
-    itemMap.set(item.id, {
+    const asset: NodeProps = {
       id: item.id,
       type: item.type,
       label: item.name,
       children: [],
-      sensorType: item.sensorType,
-      status: item.status,
-    });
+    }
+
+    if (item.type === 'asset' || item.type === 'component') {
+      asset.sensorType = item.sensorType;
+      asset.status = item.status;
+    }
+
+
+    itemMap.set(item.id, asset);
   });
 
   const result: NodeProps[] = [];

@@ -14,17 +14,27 @@ import { Checkbox } from "../components/checkbox";
 
 import styles from "./companies.module.css";
 
-export type Asset = {
+type BaseItem = {
   id: string;
-  locationId: string | null;
   name: string;
   parentId: string | null;
+  type: Type;
+};
+
+export type AssetItem = BaseItem & {
+  type: "component" | "asset";
+  locationId: string | null;
   sensorType: string | null;
   status: string | null;
   gatewayId?: string;
   sensorId?: string;
-  type: Type;
 };
+
+type LocationItem = BaseItem & {
+  type: "location";
+};
+
+export type CompanyAsset = AssetItem | LocationItem;
 
 const useCompany = () => {
   const { id } = useParams();
@@ -38,13 +48,13 @@ const useCompany = () => {
 
 const useAssets = () => {
   const { id } = useParams();
-  const result = useSWR<Asset[]>(id ? `/companies/${id}/assets` : null);
+  const result = useSWR<AssetItem[]>(id ? `/companies/${id}/assets` : null);
   return {
     ...result,
-    data: result.data?.map((d) => ({
-      ...d,
-      type: (d.sensorType ? "component" : "asset") as Type,
-    })),
+    data: result.data?.map((d) => {
+      d.type = d.sensorType ? "component" : "asset";
+      return d;
+    }),
   };
 };
 
@@ -57,7 +67,9 @@ export type Location = {
 
 const useLocations = () => {
   const { id } = useParams();
-  const result = useSWR<Location[]>(id ? `/companies/${id}/locations` : null);
+  const result = useSWR<LocationItem[]>(
+    id ? `/companies/${id}/locations` : null,
+  );
   return {
     ...result,
     data: result.data?.map((d) => ({ ...d, type: "location" as Type })),
@@ -87,25 +99,29 @@ export default function Company() {
   const { data: company } = useCompany();
   const { data: locations } = useLocations();
   const [searchParams, setSearchParams] = useSearchParams();
+  /*
 
+  */
   const treeItems =
     locations && assets
       ? generateTree(
-          locations.concat(normalizeAsset(assets)).filter((node) => {
-            if (node.type === "location") {
-              return true;
-            }
+          (locations as CompanyAsset[])
+            .concat(normalizeAsset(assets) as AssetItem[])
+            .filter((node) => {
+              if (node.type === "location") {
+                return true;
+              }
 
-            const sensorTypeParam = searchParams.get("sensorType");
-            const statusParam = searchParams.get("status");
+              const sensorTypeParam = searchParams.get("sensorType");
+              const statusParam = searchParams.get("status");
 
-            const sensorTypeMatch =
-              !sensorTypeParam || node.sensorType === sensorTypeParam;
+              const sensorTypeMatch =
+                !sensorTypeParam || node.sensorType === sensorTypeParam;
 
-            const statusMatch = !statusParam || node.status === statusParam;
+              const statusMatch = !statusParam || node.status === statusParam;
 
-            return sensorTypeMatch && statusMatch;
-          }),
+              return sensorTypeMatch && statusMatch;
+            }),
         ).filter(filterEmptyLocations)
       : [];
 

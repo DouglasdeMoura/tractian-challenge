@@ -1,6 +1,6 @@
-import { Asset } from "../routes/companies.$id";
+import { AssetItem } from "../routes/companies.$id";
 
-export const normalizeAsset = (assets: Asset[]) => {
+export const normalizeAsset = (assets: AssetItem[]) => {
   return assets.map(asset => {
     const type = asset.sensorType ? "component" : "asset"
 
