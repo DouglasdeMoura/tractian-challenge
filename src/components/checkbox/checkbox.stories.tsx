@@ -1,23 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Input } from ".";
-import { SearchIcon } from "../icons/search";
+import { Checkbox } from ".";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: "Form/Input",
-  component: Input,
+  title: "Form/Checkbox",
+  component: Checkbox,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof Checkbox>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    placeholder: "Buscar ativo ou local",
-    rightSection: <SearchIcon />,
+    children: "Checkbox",
   },
 };
