@@ -33,7 +33,11 @@ const Node: React.FC<NodeProps> = ({
 
   return (
     <div>
-      <div onClick={toggleExpand} className={styles.item}>
+      <div
+        onClick={toggleExpand}
+        className={styles.item}
+        data-open={isExpanded}
+      >
         {hasChildren &&
           (isExpanded ? (
             <ChevronIcon pointing="bottom" />

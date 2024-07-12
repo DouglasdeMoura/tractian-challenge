@@ -202,8 +202,12 @@ export default function Company() {
       ) : null}
       {locations && assets ? (
         <Tree
-          // Forces re-render when search changes
-          key={searchParams.get("q")}
+          // Forces re-render when filters changes
+          key={
+            searchParams.get("q") ||
+            searchParams.get("status") ||
+            searchParams.get("sensorType")
+          }
           data={
             searchParams.get("q")
               ? fuse.search(searchParams.get("q") || "").map((i) => i.item)
