@@ -251,11 +251,8 @@ export default function Company() {
       {locations && assets ? (
         <Tree
           // Forces re-render when filters changes
-          key={
-            search ||
-            searchParams.get("status") ||
-            searchParams.get("sensorType")
-          }
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          key={`${search}-${searchParams.get("status")}-${searchParams.get("sensorType")}`}
           data={search ? fuse.search(search).map((i) => i.item) : treeItems}
           open={
             !!search ||
