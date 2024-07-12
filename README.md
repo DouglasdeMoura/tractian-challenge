@@ -1,3 +1,12 @@
+## Development
+
+Install dependecies and run the development server:
+
+```bash
+npm i
+npm run dev
+```
+
 ## Demo
 
 <video>
@@ -5,7 +14,6 @@
   <source src="./assets/video.mov" type="video/mov" />
   <source src="./assets/video.mp4" type="video/mp4" />
 </video>
-
 
 ## TODO
 
