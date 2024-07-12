@@ -51,10 +51,7 @@ const useAssets = () => {
   const result = useSWR<AssetItem[]>(id ? `/companies/${id}/assets` : null);
   return {
     ...result,
-    data: result.data?.map((d) => {
-      d.type = d.sensorType ? "component" : "asset";
-      return d;
-    }),
+    data: result.data ? normalizeAsset(result.data) : undefined,
   };
 };
 
@@ -106,11 +103,7 @@ export default function Company() {
 
   const items = useMemo(() => {
     const localItems =
-      locations && assets
-        ? (locations as CompanyAsset[]).concat(
-            normalizeAsset(assets) as AssetItem[],
-          )
-        : [];
+      locations && assets ? (locations as CompanyAsset[]).concat(assets) : [];
 
     if (localItems.length === 0) {
       return [];
