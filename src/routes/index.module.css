@@ -6,3 +6,8 @@
   margin: 0 auto;
   max-width: 760px;
 }
+
+.radioContainer, .label {
+  display: flex;
+  gap: var(--spacing-medium);
+}

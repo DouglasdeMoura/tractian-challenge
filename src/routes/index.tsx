@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Link, Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import styles from "./index.module.css";
+import { Radio } from "../components/radio";
 
 export type Company = {
   id: string;
@@ -12,19 +13,26 @@ export const useCompanies = () => useSWR<Company[]>("/companies");
 
 function Index() {
   const { data } = useCompanies();
+  const navigate = useNavigate();
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.menu}>
         <h1>Selecione a empresa</h1>
 
-        <ul>
+        <div className={styles.radioContainer}>
           {data?.map((company) => (
-            <li key={company.id}>
-              <Link to={`/companies/${company.id}`}>{company.name}</Link>
-            </li>
+            <Radio
+              key={company.id}
+              name="company"
+              onClick={() => {
+                navigate(`/companies/${company.id}`);
+              }}
+            >
+              {company.name}
+            </Radio>
           ))}
-        </ul>
+        </div>
       </div>
       <div className={styles.content}>
         <Outlet />
