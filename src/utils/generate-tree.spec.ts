@@ -91,7 +91,7 @@ describe('generateTree', () => {
             asset : asset.locationId
               ? { ...asset, parentId: asset.locationId } : asset)
     ]
-
+    // @ts-expect-error this is a test
     expect(generateTree(items)).toEqual(response)
   })
 })
