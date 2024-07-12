@@ -112,6 +112,10 @@ export default function Company() {
           )
         : [];
 
+    if (localItems.length === 0) {
+      return [];
+    }
+
     const filteredItems = localItems.filter((node) => {
       if (node.type === "location") {
         return true;
@@ -130,7 +134,7 @@ export default function Company() {
 
     filteredItems.forEach((node) => {
       if (node.parentId && !filteredItems.find((n) => n.id === node.parentId)) {
-        const parent = items.find((n) => n.id === node.parentId);
+        const parent = localItems.find((n) => n.id === node.parentId);
 
         if (parent) {
           filteredItems.push(parent);
