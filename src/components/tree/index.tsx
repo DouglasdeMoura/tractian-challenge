@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronIcon } from "../icons/chevron";
 import styles from "./styles.module.css";
+import { IconBolt, IconAlertTriangle } from "@tabler/icons-react";
 
 export type Type = "component" | "asset" | "location";
 
@@ -10,9 +11,18 @@ export type NodeProps = {
   type: Type;
   children: NodeProps[];
   open?: boolean;
+  sensorType?: string | null;
+  status?: string | null;
 };
 
-const Node: React.FC<NodeProps> = ({ children, label, type, open }) => {
+const Node: React.FC<NodeProps> = ({
+  children,
+  label,
+  type,
+  open,
+  sensorType,
+  status,
+}) => {
   const [isExpanded, setIsExpanded] = useState(!!open);
 
   const hasChildren = children.length > 0;
@@ -32,6 +42,8 @@ const Node: React.FC<NodeProps> = ({ children, label, type, open }) => {
           ))}
         <img className={styles.icon} src={`/assets/${type}.png`} />
         {label}
+        {sensorType === "energy" ? <IconBolt /> : null}
+        {status === "alert" ? <IconAlertTriangle /> : null}
       </div>
       {isExpanded && hasChildren && (
         <div className={styles.padding}>

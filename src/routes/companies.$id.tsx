@@ -91,25 +91,21 @@ export default function Company() {
   const treeItems =
     locations && assets
       ? generateTree(
-          locations
-            .concat(
-              // @ts-expect-error No time to fix it right now
-              normalizeAsset(assets),
-            )
-            .filter((node) => {
-              if (node.type === "location") {
-                return true;
-              }
+          locations.concat(normalizeAsset(assets)).filter((node) => {
+            if (node.type === "location") {
+              return true;
+            }
 
-              const sensorTypeParam = searchParams.get("sensorType");
-              const statusParam = searchParams.get("status");
+            const sensorTypeParam = searchParams.get("sensorType");
+            const statusParam = searchParams.get("status");
 
-              const sensorTypeMatch =
-                !sensorTypeParam || node.sensorType === sensorTypeParam;
-              const statusMatch = !statusParam || node.status === statusParam;
+            const sensorTypeMatch =
+              !sensorTypeParam || node.sensorType === sensorTypeParam;
 
-              return sensorTypeMatch && statusMatch;
-            }),
+            const statusMatch = !statusParam || node.status === statusParam;
+
+            return sensorTypeMatch && statusMatch;
+          }),
         ).filter(filterEmptyLocations)
       : [];
 
@@ -167,6 +163,7 @@ export default function Company() {
                 ...Object.fromEntries(searchParams),
               });
             }}
+            defaultChecked={searchParams.get("sensorType") === "energy"}
           >
             Energy Sensors
           </Checkbox>
@@ -187,6 +184,7 @@ export default function Company() {
                 ...Object.fromEntries(searchParams),
               });
             }}
+            defaultChecked={searchParams.get("status") === "alert"}
           >
             Critical Status
           </Checkbox>
@@ -211,7 +209,11 @@ export default function Company() {
               ? fuse.search(searchParams.get("q") || "").map((i) => i.item)
               : treeItems
           }
-          open={!!searchParams.get("q")}
+          open={
+            !!searchParams.get("q") ||
+            !!searchParams.get("status") ||
+            !!searchParams.get("sensorType")
+          }
         />
       ) : null}
     </div>
