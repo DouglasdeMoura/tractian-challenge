@@ -21,10 +21,15 @@ async function enableMocking() {
 }
 
 const router = createBrowserRouter([
-  { path: "/", element: <Index /> },
   {
-    path: "/companies/:id",
-    element: <Company />,
+    path: "/",
+    element: <Index />,
+    children: [
+      {
+        path: "/companies/:id",
+        element: <Company />,
+      },
+    ],
   },
 ]);
 

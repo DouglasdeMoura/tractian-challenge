@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { Breadcrumb } from "../components/breadcrumb";
 import { useCompanies } from ".";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { NodeProps, Tree, Type } from "../components/tree";
 import Fuse from "fuse.js";
 import { useDebouncedState } from "@mantine/hooks";
@@ -238,16 +238,7 @@ export default function Company() {
           </Checkbox>
         </div>
       </div>
-      {company ? (
-        <Breadcrumb
-          items={[
-            <Link key={0} to="/">
-              Ativo
-            </Link>,
-            company.name,
-          ]}
-        />
-      ) : null}
+      {company ? <Breadcrumb items={["Ativo", company.name]} /> : null}
       {locations && assets ? (
         <Tree
           // Forces re-render when filters changes

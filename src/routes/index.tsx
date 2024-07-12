@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import useSWR from "swr";
 import styles from "./index.module.css";
 
@@ -15,15 +15,20 @@ function Index() {
 
   return (
     <div className={styles.wrapper}>
-      <h1>Selecione a empresa</h1>
+      <div className={styles.menu}>
+        <h1>Selecione a empresa</h1>
 
-      <ul>
-        {data?.map((company) => (
-          <li key={company.id}>
-            <Link to={`/companies/${company.id}`}>{company.name}</Link>
-          </li>
-        ))}
-      </ul>
+        <ul>
+          {data?.map((company) => (
+            <li key={company.id}>
+              <Link to={`/companies/${company.id}`}>{company.name}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className={styles.content}>
+        <Outlet />
+      </div>
     </div>
   );
 }
