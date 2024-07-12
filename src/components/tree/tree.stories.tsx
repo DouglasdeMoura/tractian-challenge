@@ -15,31 +15,47 @@ export const Default: Story = {
   args: {
     data: [
       {
+        id: "1",
+        type: "location",
         label: "Node 1",
         children: [
           {
+            id: "1.1",
+            type: "asset",
             label: "Node 1.1",
             children: [
               {
+                id: "1.1.1",
+                type: "component",
                 label: "Node 1.1.1",
+                children: [],
               },
               {
+                id: "1.1.2",
+                type: "component",
                 label: "Node 1.1.2",
                 children: [
                   {
                     label: "Node 1.1.2.1",
+                    children: [],
+                    id: "1.1.2.1",
+                    type: "component",
                   },
                 ],
               },
             ],
           },
           {
+            id: "1.2",
+            type: "component",
             label: "Node 1.2",
             children: [],
           },
         ],
       },
       {
+        id: "2",
+        type: "location",
         label: "Node 2",
         children: [],
       },
