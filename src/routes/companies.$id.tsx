@@ -13,6 +13,7 @@ import { Checkbox } from "../components/checkbox";
 
 import styles from "./companies.module.css";
 import { useMemo } from "react";
+import { api } from "../api/client";
 
 type BaseItem = {
   id: string;
@@ -48,11 +49,11 @@ const useCompany = () => {
 
 const useAssets = () => {
   const { id } = useParams();
-  const result = useSWR<AssetItem[]>(id ? `/companies/${id}/assets` : null);
-  return {
-    ...result,
-    data: result.data ? normalizeAsset(result.data) : undefined,
-  };
+  return useSWR(id ? `/companies/${id}/assets` : null, () => {
+    if (!id) return;
+
+    return api.get<AssetItem[]>(`/companies/${id}/assets`).then(normalizeAsset);
+  });
 };
 
 export type Location = {
