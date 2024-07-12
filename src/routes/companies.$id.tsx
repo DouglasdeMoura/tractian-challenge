@@ -4,8 +4,7 @@ import { useCompanies } from ".";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { NodeProps, Tree, Type } from "../components/tree";
 import Fuse from "fuse.js";
-
-// import styles from "./companies.module.css";
+import { useDebouncedState } from "@mantine/hooks";
 import { generateTree } from "../utils/generate-tree";
 import { normalizeAsset } from "../utils/normalize-asset";
 import { Input } from "../components/input";
@@ -99,31 +98,35 @@ export default function Company() {
   const { data: company } = useCompany();
   const { data: locations } = useLocations();
   const [searchParams, setSearchParams] = useSearchParams();
-  /*
+  const [search, setSearch] = useDebouncedState(
+    searchParams.get("q") || "",
+    500,
+  );
 
-  */
-  const treeItems =
+  const items =
     locations && assets
-      ? generateTree(
-          (locations as CompanyAsset[])
-            .concat(normalizeAsset(assets) as AssetItem[])
-            .filter((node) => {
-              if (node.type === "location") {
-                return true;
-              }
-
-              const sensorTypeParam = searchParams.get("sensorType");
-              const statusParam = searchParams.get("status");
-
-              const sensorTypeMatch =
-                !sensorTypeParam || node.sensorType === sensorTypeParam;
-
-              const statusMatch = !statusParam || node.status === statusParam;
-
-              return sensorTypeMatch && statusMatch;
-            }),
-        ).filter(filterEmptyLocations)
+      ? (locations as CompanyAsset[]).concat(
+          normalizeAsset(assets) as AssetItem[],
+        )
       : [];
+
+  const treeItems = generateTree(
+    items.filter((node) => {
+      if (node.type === "location") {
+        return true;
+      }
+
+      const sensorTypeParam = searchParams.get("sensorType");
+      const statusParam = searchParams.get("status");
+
+      const sensorTypeMatch =
+        !sensorTypeParam || node.sensorType === sensorTypeParam;
+
+      const statusMatch = !statusParam || node.status === statusParam;
+
+      return sensorTypeMatch && statusMatch;
+    }),
+  ).filter(filterEmptyLocations);
 
   const fuse = new Fuse(treeItems, {
     threshold: 0.1,
@@ -151,6 +154,7 @@ export default function Company() {
               setSearchParams({
                 ...Object.fromEntries(searchParams),
               });
+              setSearch("");
               return;
             }
 
@@ -158,6 +162,7 @@ export default function Company() {
               ...Object.fromEntries(searchParams),
               q: e.currentTarget.value,
             });
+            setSearch(e.currentTarget.value);
           }}
           defaultValue={searchParams.get("q") || ""}
         />
@@ -220,17 +225,13 @@ export default function Company() {
         <Tree
           // Forces re-render when filters changes
           key={
-            searchParams.get("q") ||
+            search ||
             searchParams.get("status") ||
             searchParams.get("sensorType")
           }
-          data={
-            searchParams.get("q")
-              ? fuse.search(searchParams.get("q") || "").map((i) => i.item)
-              : treeItems
-          }
+          data={search ? fuse.search(search).map((i) => i.item) : treeItems}
           open={
-            !!searchParams.get("q") ||
+            !!search ||
             !!searchParams.get("status") ||
             !!searchParams.get("sensorType")
           }
