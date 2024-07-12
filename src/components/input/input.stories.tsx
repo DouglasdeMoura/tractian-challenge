@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { userEvent, within, expect } from "@storybook/test";
 import { Input } from ".";
 import { SearchIcon } from "../icons/search";
 
@@ -19,5 +20,15 @@ export const Default: Story = {
   args: {
     placeholder: "Buscar ativo ou local",
     rightSection: <SearchIcon />,
+    error: "Pesquisa inválida",
+    required: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.tab();
+    await userEvent.tab();
+
+    await expect(canvas.getByText("Pesquisa inválida")).toBeInTheDocument();
   },
 };
