@@ -19,4 +19,4 @@ npm run dev
 
 - [x] Add video;
 - [ ] Add more tests;
-- [ ] Improve the search algorithm (maybe[this](https://third-bit.com/sdxjs/data-table/) would help).
+- [ ] Improve the search algorithm (maybe [this](https://third-bit.com/sdxjs/data-table/) would help).
