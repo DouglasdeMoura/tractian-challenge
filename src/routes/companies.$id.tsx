@@ -12,6 +12,7 @@ import { SearchIcon } from "../components/icons/search";
 import { Checkbox } from "../components/checkbox";
 
 import styles from "./companies.module.css";
+import { useMemo } from "react";
 
 type BaseItem = {
   id: string;
@@ -103,40 +104,52 @@ export default function Company() {
     500,
   );
 
-  const items =
-    locations && assets
-      ? (locations as CompanyAsset[]).concat(
-          normalizeAsset(assets) as AssetItem[],
-        )
-      : [];
+  const items = useMemo(() => {
+    const localItems =
+      locations && assets
+        ? (locations as CompanyAsset[]).concat(
+            normalizeAsset(assets) as AssetItem[],
+          )
+        : [];
 
-  const filteredItems = items.filter((node) => {
-    if (node.type === "location") {
-      return true;
-    }
-
-    const sensorTypeParam = searchParams.get("sensorType");
-    const statusParam = searchParams.get("status");
-
-    const sensorTypeMatch =
-      !sensorTypeParam || node.sensorType === sensorTypeParam;
-
-    const statusMatch = !statusParam || node.status === statusParam;
-
-    return sensorTypeMatch && statusMatch;
-  });
-
-  filteredItems.forEach((node) => {
-    if (node.parentId && !filteredItems.find((n) => n.id === node.parentId)) {
-      const parent = items.find((n) => n.id === node.parentId);
-
-      if (parent) {
-        filteredItems.push(parent);
+    const filteredItems = localItems.filter((node) => {
+      if (node.type === "location") {
+        return true;
       }
-    }
-  });
 
-  const treeItems = generateTree(filteredItems).filter(filterEmptyLocations);
+      const sensorTypeParam = searchParams.get("sensorType");
+      const statusParam = searchParams.get("status");
+
+      const sensorTypeMatch =
+        !sensorTypeParam || node.sensorType === sensorTypeParam;
+
+      const statusMatch = !statusParam || node.status === statusParam;
+
+      return sensorTypeMatch && statusMatch;
+    });
+
+    filteredItems.forEach((node) => {
+      if (node.parentId && !filteredItems.find((n) => n.id === node.parentId)) {
+        const parent = items.find((n) => n.id === node.parentId);
+
+        if (parent) {
+          filteredItems.push(parent);
+        }
+      }
+    });
+
+    return filteredItems;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    locations,
+    assets,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    searchParams.get("sensorType"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    searchParams.get("status"),
+  ]);
+
+  const treeItems = generateTree(items).filter(filterEmptyLocations);
 
   const fuse = new Fuse(treeItems, {
     threshold: 0.1,
